@@ -1,292 +1,240 @@
-import { useCallback, useEffect, useState, useRef } from '@lynx-js/react'
-import type { ScrollEvent } from '@lynx-js/types'
-
-import './App.css'
-import { VerticalScrollItem } from "./component/scrollItem.jsx";
-import { HorizontalScrollItem } from "./component/scrollItem.jsx";
-
-import arrow from './assets/arrow.png'
-import lynxLogo from './assets/lynx-logo.png'
-import reactLynxLogo from './assets/react-logo.png'
+import { useState } from '@lynx-js/react';
+import './App.css';
+import { SelectionPage } from './pages/SelectionPage/SelectionPage.jsx';
+import { TimelinePage } from './pages/TimelinePage/TimelinePage.jsx';
 
 interface TimelineEvent {
   title: string;
   year: number;
+  endYear?: number;
+  description?: string;
+  mainImage?: string;
+  images?: string[];
 }
 
-const iranEvents: TimelineEvent[] = [
-  { title: "Achaemenid Empire", year: 550 },
-  { title: "Parthian Empire", year: 247 },
-  { title: "Sasanian Empire", year: 224 },
-  { title: "Samanid Empire", year: 819 },
-  { title: "Safavid Empire", year: 1501 },
-  { title: "Afsharid Dynasty", year: 1736 },
-  { title: "Zand Dynasty", year: 1751 },
-  { title: "Qajar Dynasty", year: 1789 },
-  { title: "Pahlavi Dynasty", year: 1925 }
-].sort((a, b) => a.year - b.year);
+interface Subject {
+  id: string;
+  name: string;
+  categoryId: string;
+  color?: string;
+  events: TimelineEvent[];
+}
 
-const islamicEvents: TimelineEvent[] = [
-  { title: "Rise of Islam", year: 610 },
-  { title: "Rashidun Caliphate", year: 632 },
-  { title: "Umayyad Caliphate", year: 661 },
-  { title: "Abbasid Caliphate", year: 750 },
-  { title: "Fatimid Caliphate", year: 909 },
-  { title: "Saladin Era", year: 1174 },
-  { title: "Mamluk Sultanate", year: 1250 },
-  { title: "Ottoman Empire", year: 1299 },
-  { title: "Mughal Empire", year: 1526 }
-].sort((a, b) => a.year - b.year);
+// Mock data
+const mockTechnologyEvents: TimelineEvent[] = [
+  {
+    title: "First Mobile Phone",
+    year: 1973,
+    description: "Martin Cooper made the first handheld cellular phone call on a Motorola DynaTAC. This revolutionary moment marked the beginning of the mobile phone era. The DynaTAC 8000X became the first commercially available cell phone in 1983, weighing 2.5 pounds and offering 30 minutes of talk time.",
+    mainImage: "https://images.unsplash.com/photo-1584006682522-dc17d6c0d9ac?q=80&w=1000",
+    images: [
+      "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?q=80&w=1000",
+      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1000",
+      "https://images.unsplash.com/photo-1557189750-56d1be9e963a?q=80&w=1000",
+      "https://images.unsplash.com/photo-1570101945621-945409a6370f?q=80&w=1000"
+    ]
+  },
+  {
+    title: "Smartphone Revolution",
+    year: 2007,
+    endYear: 2010,
+    description: "The introduction of the iPhone in 2007 revolutionized mobile computing, followed by Android phones that together transformed how we interact with technology. This era marked a fundamental shift in personal computing, bringing powerful computers into our pockets. The App Store launched in 2008 created a new digital economy and changed how we access services and entertainment.",
+    mainImage: "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?q=80&w=1000",
+    images: [
+      "https://images.unsplash.com/photo-1526406915894-7bcd65f60845?q=80&w=1000",
+      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1000",
+      "https://images.unsplash.com/photo-1556656793-08538906a9f8?q=80&w=1000",
+      "https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?q=80&w=1000",
+      "https://images.unsplash.com/photo-1523206489230-c012c64b2b48?q=80&w=1000"
+    ]
+  }
+];
 
-const TimelineItem = ({ title, year, color, scale = 1, transformOrigin = 'center' }: { 
-  title: string; 
-  year: number; 
-  color: string;
-  scale?: number;
-  transformOrigin?: string;
-}) => (
-  <view style={{
-    backgroundColor: color,
-    padding: "16px",
-    borderRadius: "12px",
-    width: "180px",
-    transform: `scale(${scale})`,
-    transformOrigin,
-    transition: "all 0.3s ease",
-    opacity: Math.max(0.4, scale)
-  }}>
-    <text style={{ 
-      color: 'white', 
-      fontSize: "24px", 
-      fontWeight: "bold",
-      marginBottom: "4px"
-    }}>{title}</text>
-    <text style={{ 
-      color: 'white', 
-      fontSize: "20px"
-    }}>{year}</text>
-  </view>
-);
+const mockArtEvents: TimelineEvent[] = [
+  {
+    title: "Impressionism Movement",
+    year: 1872,
+    endYear: 1892,
+    description: "A 19th-century art movement characterized by small, thin brush strokes, emphasis on light, and ordinary subject matter.",
+    mainImage: "https://images.unsplash.com/photo-1579783901586-d88db74b4fe4?q=80&w=1000",
+    images: [
+      "https://images.unsplash.com/photo-1569227997100-2834398c8dea?q=80&w=1000"
+    ]
+  },
+  {
+    title: "Pop Art Era",
+    year: 1955,
+    endYear: 1975,
+    description: "An art movement that emerged in the 1950s, challenging traditions by including imagery from popular culture.",
+    mainImage: "https://images.unsplash.com/photo-1607457561901-e6ec3a6d16cf?q=80&w=1000",
+    images: [
+      "https://images.unsplash.com/photo-1579783901586-d88db74b4fe4?q=80&w=1000"
+    ]
+  }
+];
+
+const mockBuddhismEvents: TimelineEvent[] = [
+  {
+    title: "Birth of Buddha",
+    year: -563,
+    description: "Siddhartha Gautama, who later became the Buddha, was born in Lumbini, present-day Nepal.",
+    mainImage: "https://images.unsplash.com/photo-1523731407965-2430cd12f5e4?q=80&w=1000",
+    images: [
+      "https://images.unsplash.com/photo-1610308035593-ac5c16c15ad5?q=80&w=1000"
+    ]
+  },
+  {
+    title: "Buddhism Spreads to China",
+    year: -200,
+    endYear: 200,
+    description: "Buddhism began to spread from India to China via the Silk Road trade routes.",
+    mainImage: "https://images.unsplash.com/photo-1566552881560-0be862a7c445?q=80&w=1000",
+    images: [
+      "https://images.unsplash.com/photo-1523731407965-2430cd12f5e4?q=80&w=1000"
+    ]
+  }
+];
+
+const mockRomanEvents: TimelineEvent[] = [
+  {
+    title: "Founding of Rome",
+    year: -753,
+    description: "According to tradition, Rome was founded by Romulus on the Palatine Hill.",
+    mainImage: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?q=80&w=1000",
+    images: [
+      "https://images.unsplash.com/photo-1588614959060-4d156fcd576e?q=80&w=1000"
+    ]
+  },
+  {
+    title: "Roman Republic",
+    year: -509,
+    endYear: -27,
+    description: "Period of ancient Roman civilization beginning with the overthrow of the Roman Kingdom and ending with the establishment of the Roman Empire.",
+    mainImage: "https://images.unsplash.com/photo-1626623757048-6400c65ea195?q=80&w=1000",
+    images: [
+      "https://images.unsplash.com/photo-1552832230-c0197dd311b5?q=80&w=1000"
+    ]
+  }
+];
+
+const mockIslamicEvents: TimelineEvent[] = [
+  {
+    title: "Birth of Islam",
+    year: 570,
+    description: "Prophet Muhammad was born in Mecca, marking the beginning of Islamic history.",
+    mainImage: "https://images.unsplash.com/photo-1564769610726-59cead6a6f8f?q=80&w=1000",
+    images: [
+      "https://images.unsplash.com/photo-1585129777188-95726028a6e7?q=80&w=1000"
+    ]
+  },
+  {
+    title: "Islamic Golden Age",
+    year: 750,
+    endYear: 1258,
+    description: "A period of scientific, cultural, and economic flourishing in Islamic history, marked by advances in mathematics, astronomy, medicine, and architecture.",
+    mainImage: "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=80&w=1000",
+    images: [
+      "https://images.unsplash.com/photo-1542315204-5da5dd15ae4e?q=80&w=1000"
+    ]
+  }
+];
+
+const mockIranianEvents: TimelineEvent[] = [
+  {
+    title: "Cyrus the Great",
+    year: -559,
+    endYear: -530,
+    description: "Founder of the Achaemenid Empire, the first Persian Empire. Known for his charter of human rights and religious tolerance.",
+    mainImage: "https://images.unsplash.com/photo-1561828995-aa79a2db86dd?q=80&w=1000",
+    images: [
+      "https://images.unsplash.com/photo-1568742339336-55c0d854ae89?q=80&w=1000"
+    ]
+  },
+  {
+    title: "Safavid Dynasty",
+    year: 1501,
+    endYear: 1736,
+    description: "One of Iran's most significant ruling dynasties, establishing Twelver Islam as the official religion and ushering in a golden age of Persian art and culture.",
+    mainImage: "https://images.unsplash.com/photo-1570459027562-4a916cc6113f?q=80&w=1000",
+    images: [
+      "https://images.unsplash.com/photo-1570458436416-b8fcccfe883f?q=80&w=1000"
+    ]
+  }
+];
 
 export const App = () => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const itemHeight = 120; // Height of each timeline item
-  const visibleItems = 5; // Number of visible items
-  const viewportHeight = typeof window !== 'undefined' ? window.innerHeight - 240 : 600; // Viewport height minus header and footer
+  const [selectedSubjects, setSelectedSubjects] = useState<{
+    subject1: Subject | null;
+    subject2: Subject | null;
+  }>({
+    subject1: null,
+    subject2: null
+  });
 
-  // Combine and sort all events chronologically
-  const allEvents = [...iranEvents, ...islamicEvents].sort((a, b) => a.year - b.year);
-  
-  // Find the index of each event in the sorted timeline
-  const getEventIndex = (year: number) => {
-    return allEvents.findIndex(event => event.year === year);
+  const handleCompareSelected = (subject1: Subject, subject2: Subject) => {
+    // Add appropriate mock events based on category and subject
+    const getEventsForSubject = (subject: Subject) => {
+      switch (subject.id) {
+        case 'iran-history':
+          return mockIranianEvents;
+        case 'islamic-history':
+          return mockIslamicEvents;
+        case 'buddhism':
+          return mockBuddhismEvents;
+        case 'roman-history':
+          return mockRomanEvents;
+        case 'renaissance-art':
+        case 'modern-art':
+          return mockArtEvents;
+        case 'scientific-revolution':
+        case 'modern-physics':
+          return mockTechnologyEvents;
+        default:
+          return [];
+      }
+    };
+
+    const enhancedSubject1 = {
+      ...subject1,
+      events: getEventsForSubject(subject1)
+    };
+    const enhancedSubject2 = {
+      ...subject2,
+      events: getEventsForSubject(subject2)
+    };
+
+    setSelectedSubjects({
+      subject1: enhancedSubject1,
+      subject2: enhancedSubject2
+    });
   };
 
-  const getScale = (index: number, scrollTop: number) => {
-    // Calculate the center position of the viewport
-    const viewportCenter = scrollTop + (viewportHeight / 2);
-    // Calculate the center position of the item
-    const itemCenter = (index * itemHeight) + (itemHeight / 2);
-    // Calculate the distance from the viewport center
-    const distanceFromCenter = Math.abs(viewportCenter - itemCenter);
-    // Convert distance to a 0-1 scale factor
-    const scaleFactor = Math.max(0, 1 - (distanceFromCenter / (viewportHeight / 2)));
-    // Apply non-linear scaling
-    return 0.6 + (0.4 * Math.pow(scaleFactor, 2));
+  const handleBack = () => {
+    setSelectedSubjects({
+      subject1: null,
+      subject2: null
+    });
   };
 
-  const getOpacity = (index: number, scrollTop: number) => {
-    const viewportCenter = scrollTop + (viewportHeight / 2);
-    const itemCenter = (index * itemHeight) + (itemHeight / 2);
-    const distanceFromCenter = Math.abs(viewportCenter - itemCenter);
-    const opacityFactor = Math.max(0, 1 - (distanceFromCenter / (viewportHeight / 2)));
-    return 0.4 + (0.6 * opacityFactor);
-  };
-
-  const [scrollPosition, setScrollPosition] = useState(0);
+  if (selectedSubjects.subject1 && selectedSubjects.subject2) {
+    return (
+      <TimelinePage
+        subject1={{
+          name: selectedSubjects.subject1.name,
+          color: selectedSubjects.subject1.color || '#5FBFB0',
+          events: selectedSubjects.subject1.events
+        }}
+        subject2={{
+          name: selectedSubjects.subject2.name,
+          color: selectedSubjects.subject2.color || '#6B77C1',
+          events: selectedSubjects.subject2.events
+        }}
+        onBack={handleBack}
+      />
+    );
+  }
 
   return (
-    <view style={{ 
-      width: "100%", 
-      height: "100vh", 
-      backgroundColor: "#FFFFFF", 
-      display: "flex", 
-      flexDirection: "column"
-    }}>
-      {/* Header */}
-      <view style={{ padding: "16px", marginTop: "40px"}}>
-        <text style={{ 
-          fontSize: "32px", 
-          fontWeight: "bold", 
-          marginBottom: "24px", 
-          color: "black"
-        }}>Timeline Comparison</text>
-      </view>
-
-      {/* Category Buttons */}
-      <view style={{ 
-        padding: "0px 16px",
-        display: "flex",
-        flexDirection: "row",
-        gap: "12px",
-        marginBottom: "24px"
-      }}>
-        <view style={{ 
-          backgroundColor: "#5FBFB0", 
-          padding: "16px",
-          borderRadius: "32px",
-          flex: "1"
-        }}>
-          <text style={{ 
-            color: "white", 
-            fontWeight: "bold", 
-            fontSize: "20px",
-            textAlign: "center"
-          }}>Iran History</text>
-        </view>
-        
-        <view style={{ 
-          backgroundColor: "#6B77C1",
-          padding: "16px",
-          borderRadius: "32px",
-          flex: "1"
-        }}>
-          <text style={{ 
-            color: "white", 
-            fontWeight: "bold", 
-            fontSize: "20px",
-            textAlign: "center"
-          }}>Islamic History</text>
-        </view>
-      </view>
-
-      {/* Timeline Container */}
-      <view style={{ 
-        flex: 1,
-        position: "relative",
-        overflow: "hidden",
-        height: "calc(100vh - 240px)" // Subtract header and bottom nav height
-      }}>
-        {/* Center Line */}
-        <view style={{ 
-          width: "2px", 
-          backgroundColor: "#E0E0E0",
-          position: "absolute",
-          left: "50%",
-          top: "0px",
-          bottom: "0px",
-          transform: "translateX(-50%)",
-          zIndex: 1
-        }} />
-
-        {/* Scrollable Timeline */}
-        <scroll-view
-          scroll-y
-          style={{ 
-            height: "100%",
-            overscrollBehavior: "contain"
-          }}
-          bindscroll={(event: ScrollEvent) => {
-            const scrollTop = event.detail?.scrollTop || 0;
-            setScrollPosition(scrollTop);
-            // Calculate the index based on the center of the viewport
-            const viewportCenter = scrollTop + (viewportHeight / 2);
-            const index = Math.floor(viewportCenter / itemHeight);
-            setSelectedIndex(index);
-          }}
-        >
-          <view style={{ 
-            padding: "0px 16px",
-            paddingTop: `${itemHeight * 2}px`,
-            paddingBottom: `${itemHeight * 2}px`,
-            minHeight: `${itemHeight * (allEvents.length + 4)}px`
-          }}>
-            {iranEvents.map((event) => {
-              const index = getEventIndex(event.year);
-              return (
-                <view key={`iran-${event.year}`} style={{ 
-                  position: "absolute",
-                  left: "0px",
-                  right: "50%",
-                  top: `${index * itemHeight}px`,
-                  height: `${itemHeight}px`,
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                  paddingRight: "20px",
-                  transition: "all 0.3s ease"
-                }}>
-                  <TimelineItem 
-                    title={event.title} 
-                    year={event.year} 
-                    color="#5FBFB0"
-                    scale={getScale(index, scrollPosition)}
-                    transformOrigin="right center"
-                  />
-                </view>
-              );
-            })}
-
-            {islamicEvents.map((event) => {
-              const index = getEventIndex(event.year);
-              return (
-                <view key={`islamic-${event.year}`} style={{ 
-                  position: "absolute",
-                  left: "50%",
-                  right: "0px",
-                  top: `${index * itemHeight}px`,
-                  height: `${itemHeight}px`,
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                  paddingLeft: "20px",
-                  transition: "all 0.3s ease"
-                }}>
-                  <TimelineItem 
-                    title={event.title} 
-                    year={event.year} 
-                    color="#6B77C1"
-                    scale={getScale(index, scrollPosition)}
-                    transformOrigin="left center"
-                  />
-                </view>
-              );
-            })}
-
-            {/* Year Markers */}
-            {allEvents.map((event, index) => (
-              <text key={`year-${event.year}`} style={{
-                position: "absolute",
-                left: "50%",
-                top: `${index * itemHeight + itemHeight/2}px`,
-                transform: "translateX(-50%)",
-                color: "#666666",
-                fontSize: "14px",
-                opacity: getOpacity(index, scrollPosition)
-              }}>{event.year}</text>
-            ))}
-          </view>
-        </scroll-view>
-      </view>
-
-      {/* Bottom Navigation */}
-      <view style={{ 
-        padding: "16px",
-        borderTopWidth: "1px",
-        borderTopColor: "#E0E0E0",
-        backgroundColor: "#FFFFFF",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        height: "80px"
-      }}>
-        <text style={{ color: "#666666", fontSize: "20px" }}>🏠</text>
-        <text style={{ color: "#666666", fontSize: "20px" }}>⬇️</text>
-        <text style={{ color: "#666666", fontSize: "20px" }}>🔍</text>
-        <text style={{ color: "#666666", fontSize: "20px" }}>🔍</text>
-        <text style={{ color: "#666666", fontSize: "20px" }}>☰</text>
-      </view>
-    </view>
+    <SelectionPage onCompareSelected={handleCompareSelected} />
   );
 };
