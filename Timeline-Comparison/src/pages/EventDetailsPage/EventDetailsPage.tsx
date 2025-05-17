@@ -1,5 +1,6 @@
 import type { FC } from '@lynx-js/react';
 import { useState, useEffect } from '@lynx-js/react';
+import { SafeImage } from '../../components/SafeImage';
 
 interface EventDetailsPageProps {
   title: string;
@@ -72,11 +73,19 @@ export const EventDetailsPage: FC<EventDetailsPageProps> = ({
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundImage: `url(${mainImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            opacity: 0.2
-          }} />
+            opacity: 0.2,
+            overflow: "hidden"
+          }}>
+            <SafeImage 
+              src={mainImage}
+              fallbackSrc="/assets/fallbacks/default.png"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover"
+              }}
+            />
+          </view>
         )}
         
         {/* Gradient Overlay */}
@@ -230,8 +239,9 @@ export const EventDetailsPage: FC<EventDetailsPageProps> = ({
                       transition: "transform 0.2s ease"
                     }}
                   >
-                    <image
+                    <SafeImage
                       src={image}
+                      fallbackSrc="/assets/fallbacks/default.png"
                       style={{
                         width: "100%",
                         height: "100%",
