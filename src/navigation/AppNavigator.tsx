@@ -1,4 +1,5 @@
 import React from 'react';
+import { Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CategorySelectionScreen from '../screens/CategorySelectionScreen';
@@ -29,7 +30,8 @@ const AppNavigator = () => {
         initialRouteName="CategorySelection"
         screenOptions={{
           headerShown: false,
-          animation: 'ios_from_right',
+          // if ios use 'ios_from_right' for iOS, 'slide_from_right' for Android
+           animation: Platform.OS === 'ios' ? 'ios_from_right' : 'slide_from_right',
           contentStyle: { backgroundColor: 'white' },
           gestureEnabled: true,
         }}
@@ -60,8 +62,9 @@ const AppNavigator = () => {
           options={{
             title: 'Timeline Comparison',
             headerShown: false,
-            animation: 'ios_from_right',
-            gestureEnabled: false,
+            animation: Platform.OS === 'ios' ? 'ios_from_right' : 'slide_from_right',
+            gestureEnabled: true,
+            
           }}
         />
         <Stack.Screen
