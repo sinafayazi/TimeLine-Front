@@ -29,7 +29,7 @@ const AppNavigator = () => {
         initialRouteName="CategorySelection"
         screenOptions={{
           headerShown: false,
-          animation: 'slide_from_right',
+          animation: 'ios_from_right',
           contentStyle: { backgroundColor: 'white' },
           gestureEnabled: true,
         }}
@@ -60,7 +60,7 @@ const AppNavigator = () => {
           options={{
             title: 'Timeline Comparison',
             headerShown: false,
-            animation: 'fade_from_bottom',
+            animation: 'ios_from_right',
             gestureEnabled: false,
           }}
         />
