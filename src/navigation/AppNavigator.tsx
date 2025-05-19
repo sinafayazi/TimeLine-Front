@@ -62,7 +62,6 @@ const AppNavigator = () => {
           options={{
             title: 'Timeline Comparison',
             headerShown: false,
-            animation: Platform.OS === 'ios' ? 'ios_from_right' : 'slide_from_right',
             gestureEnabled: true,
             
           }}
@@ -70,11 +69,6 @@ const AppNavigator = () => {
         <Stack.Screen
           name="EventDetail"
           component={EventDetailScreen}
-          options={{
-            headerShown: false,
-            animation: 'slide_from_bottom',
-            presentation: 'transparentModal',
-          }}
         />
         <Stack.Screen
           name="WheelDateTimeline"

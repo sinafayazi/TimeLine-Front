@@ -246,7 +246,7 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.6)',
+            backgroundColor: 'rgba(0,0,0,0.8)',
             zIndex: 10,
           },
           overlayStyle
@@ -268,7 +268,7 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
             bottom: 0,
             left: 0,
             right: 0,
-            maxHeight: '90%',
+            maxHeight: '100%',
             zIndex: 20,
             paddingBottom: insets.bottom || 20,
             borderTopLeftRadius: 20,
@@ -277,7 +277,7 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
           },
           modalStyle
         ]}
-        className="bg-white"
+        className="bg-white/20 backdrop-blur-lg"
       >
         {/* Header with title and close button */}
         <View className={`px-4 py-5 ${headerColor}`}>
