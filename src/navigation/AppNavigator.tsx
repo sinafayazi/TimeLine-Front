@@ -60,7 +60,7 @@ const AppNavigator = () => {
           component={ComparisonTimelineScreen}
           options={{
             title: 'Timeline Comparison',
-            headerShown: false,
+            headerShown: true,
             gestureEnabled: true,
             
           }}

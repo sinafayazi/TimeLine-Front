@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
@@ -22,8 +22,10 @@ const ComparisonTimelineScreen = ({ route, navigation }: Props) => {
   const subject1 = MOCK_SUBJECTS.find(subject => subject && subject.id === subjectId1);
   const subject2 = MOCK_SUBJECTS.find(subject => subject && subject.id === subjectId2);
 
-  // Get random but different colors for the two subjects
-  const { subject1: subject1Color, subject2: subject2Color } = getComparisonColors();
+  // Get random but different colors for the two subjects, memoized
+  const { subject1: subject1Color, subject2: subject2Color } = useMemo(() => {
+    return getComparisonColors();
+  }, [subjectId1, subjectId2]); // Dependencies: only recalculate if subject IDs change
 
   // Handle event press to show details with enhanced validation
   const handleEventPress = useCallback((event: Event, isSubject1: boolean) => {
@@ -117,14 +119,6 @@ const ComparisonTimelineScreen = ({ route, navigation }: Props) => {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
-      <View className="p-4 flex-row justify-between items-center bg-white shadow-sm">
-        <TouchableOpacity onPress={handleBackPress} className="p-2">
-          <Text className="text-blue-500 text-lg">Back</Text>
-        </TouchableOpacity>
-        <Text className="text-xl font-bold text-gray-700">Timeline Comparison</Text>
-        <View className="w-10" />{/* Spacer */}
-      </View>
-
       {error && (
         <View className="p-4 bg-red-100 border border-red-400 rounded-md m-4">
           <Text className="text-red-700 font-semibold">An Error Occurred</Text>

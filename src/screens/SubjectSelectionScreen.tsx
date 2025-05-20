@@ -65,7 +65,8 @@ const SubjectSelectionScreen = ({ route, navigation }: Props) => {
       
     // Create color styles based on category color
     const borderColor = categoryColor.replace('bg-', 'border-').replace('-500', '-600');
-    const bgColor = categoryColor.replace('bg-', 'bg-').replace('-500', '-50');
+    // Set background to white for a consistent look, similar to iOS
+    const bgColor = 'bg-white'; 
     const textColor = categoryColor.replace('bg-', 'text-').replace('-500', '-800');
     
     return (
@@ -74,6 +75,7 @@ const SubjectSelectionScreen = ({ route, navigation }: Props) => {
         className="w-full mb-4"
       >
         <TouchableOpacity
+          // Apply the dynamic background color here
           className={`flex-row items-center p-3 rounded-xl ${bgColor} border-2 ${borderColor} shadow-sm`}
           onPress={() => handleSelectSubject(item.id)}
           activeOpacity={0.7}
