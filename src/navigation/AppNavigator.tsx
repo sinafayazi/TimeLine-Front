@@ -6,7 +6,6 @@ import CategorySelectionScreen from '../screens/CategorySelectionScreen';
 import SubjectSelectionScreen from '../screens/SubjectSelectionScreen';
 import ComparisonTimelineScreen from '../screens/ComparisonTimelineScreen';
 import EventDetailScreen from '../screens/EventDetailScreen';
-import WheelDateTimelineScreen from '../screens/WheelDateTimelineScreen'; // Import the screen
 
 // Define the ParamList for type safety
 export type RootStackParamList = {
@@ -70,14 +69,7 @@ const AppNavigator = () => {
           name="EventDetail"
           component={EventDetailScreen}
         />
-        <Stack.Screen
-          name="WheelDateTimeline"
-          component={WheelDateTimelineScreen}
-          options={{
-            title: 'Wheel Timeline',
-            headerShown: false, // Or true if you want a header
-          }}
-        />
+       
       </Stack.Navigator>
     </NavigationContainer>
   );

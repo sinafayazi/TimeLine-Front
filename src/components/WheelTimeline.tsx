@@ -8,7 +8,7 @@ import Animated, {
   Extrapolation,
 } from 'react-native-reanimated';
 import { Event, Subject } from '../types';
-import TimelineEventFixable from './TimelineEventFixable';
+import TimelineEventFixable from './TimelineEvent';
 import OptimizedImage from './OptimizedImage';
 import { Svg, Line } from 'react-native-svg';
 
