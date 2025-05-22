@@ -2,8 +2,8 @@ export interface Event {
   id: string;
   title: string;
   description: string;
-  date: string; // Using ISO string format for simplicity (e.g., "2024-05-15T10:00:00Z")
-  endDate?: string; // Optional end date for events spanning a duration
+  date: string; // ISO string format (e.g., "2024-05-15T10:00:00Z"). Represents the start date of the event.
+  endDate?: string; // Optional: ISO string format. Represents the end date if the event spans a duration.
   mainImage: string; // URL or local path
   images?: string[]; // Optional array of additional image URLs/paths
   category?: string; // Category of the event, used for fallback images

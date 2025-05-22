@@ -64,57 +64,48 @@ const SubjectSelectionScreen = ({ route, navigation }: Props) => {
       'https://images.unsplash.com/photo-1511300636408-a63a89df3482?w=800';
       
     // Create color styles based on category color
-    const borderColor = categoryColor.replace('bg-', 'border-').replace('-500', '-600');
-    // Set background to white for a consistent look, similar to iOS
+    const borderColor = categoryColor.replace('bg-', 'border-').replace('-500', '-300'); // Lighter border
     const bgColor = 'bg-white'; 
-    const textColor = categoryColor.replace('bg-', 'text-').replace('-500', '-800');
+    const titleColor = categoryColor.replace('bg-', 'text-').replace('-500', '-700'); // Darker for title
+    const eventCountColor = categoryColor.replace('bg-', 'text-').replace('-500', '-500'); // Muted for event count
     
     return (
       <Animated.View
         entering={SlideInRight.delay(index * 100).duration(400)}
-        className="w-full mb-4"
+        className="w-full mb-3" // Reduced bottom margin
       >
         <TouchableOpacity
           // Apply the dynamic background color here
-          className={`flex-row items-center p-3 rounded-xl ${bgColor} border-2 ${borderColor} shadow-sm`}
+          className={`flex-row items-center p-4 rounded-lg ${bgColor} border ${borderColor} shadow-md`} // Adjusted padding, border, shadow
           onPress={() => handleSelectSubject(item.id)}
-          activeOpacity={0.7}
+          activeOpacity={0.8} // Slightly increased active opacity
         >
           <Image
             source={{ uri: imageUrl }}
-            className="w-16 h-16 rounded-lg"
+            className="w-20 h-20 rounded-md" // Slightly larger image, softer corners
             resizeMode="cover"
           />
           
           <View className="flex-1 ml-4">
-            <Text className={`text-lg font-bold ${textColor}`}>
+            <Text className={`text-xl font-semibold ${titleColor}`}> 
               {item.name}
             </Text>
-            <Text className="text-gray-500 text-sm">
+            <Text className={`text-sm ${eventCountColor} mt-1`}> 
               {item.events.length} events
             </Text>
           </View>
           
-          <Text className="text-gray-400">→</Text>
+          {/* Chevron icon or similar for affordance */}
+          <View className={`p-2 rounded-full ${categoryColor.replace('-500', '-100')}`}>
+            <Text className={`${categoryColor.replace('bg-', 'text-').replace('-500', '-600')} font-bold`}>›</Text>
+          </View>
         </TouchableOpacity>
       </Animated.View>
     );
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
-      <View className={`p-4 ${categoryColor}`}>
-        <Animated.Text 
-          entering={FadeIn.duration(600)}
-          className="text-white text-2xl font-bold text-center"
-        >
-          {categoryName}
-        </Animated.Text>
-        <Text className="text-white opacity-80 text-center mt-1">
-          Select subject {selectionStage} for comparison
-        </Text>
-      </View>
-      
+    <SafeAreaView className="flex-1 bg-gray-50" edges={['bottom', 'left', 'right']}>
       <FlatList
         data={subjects}
         keyExtractor={(item) => item.id}
@@ -122,18 +113,6 @@ const SubjectSelectionScreen = ({ route, navigation }: Props) => {
         contentContainerStyle={{ padding: 16 }}
       />
       
-      {selectionStage === 2 && (
-        <View className="p-4 bg-white border-t border-gray-200">
-          <TouchableOpacity 
-            className="p-3 bg-gray-200 rounded-lg"
-            onPress={() => navigation.goBack()}
-          >
-            <Text className="text-center font-semibold text-gray-700">
-              Back to Categories
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
     </SafeAreaView>
   );
 };

@@ -60,18 +60,38 @@ const TimelineEventFixable = memo<TimelineEventFixableProps>(({
   const formattedDate = useMemo(() => {
     try {
       if (!event.date) return 'No date';
-      const dateObj = new Date(event.date);
-      if (isNaN(dateObj.getTime())) return 'Invalid date';
-      return dateObj.toLocaleDateString('en-US', {
+      const startDateObj = new Date(event.date);
+      if (isNaN(startDateObj.getTime())) return 'Invalid start date';
+
+      let dateStr = startDateObj.toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
         // year: 'numeric' // Add year if desired
       });
+
+      if (event.endDate) {
+        const endDateObj = new Date(event.endDate);
+        if (!isNaN(endDateObj.getTime())) {
+          // Check if start and end dates are different
+          if (startDateObj.toDateString() !== endDateObj.toDateString()) {
+            dateStr += ` - ${endDateObj.toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              // year: 'numeric' // Add year if desired, ensure consistency
+            })}`;
+          }
+          // If dates are the same, it implies a single-day event, already formatted.
+        } else {
+          // endDate is present but invalid
+          dateStr += ' (End date invalid)';
+        }
+      }
+      return dateStr;
     } catch (error) {
-      console.error("Error formatting date:", event.date, error);
+      console.error("Error formatting date:", event.date, event.endDate, error);
       return 'Date error';
     }
-  }, [event.date]);
+  }, [event.date, event.endDate]);
 
   const fallbackImage = useMemo(() => {
     try {

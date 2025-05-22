@@ -6,6 +6,7 @@ import CategorySelectionScreen from '../screens/CategorySelectionScreen';
 import SubjectSelectionScreen from '../screens/SubjectSelectionScreen';
 import ComparisonTimelineScreen from '../screens/ComparisonTimelineScreen';
 import EventDetailScreen from '../screens/EventDetailScreen';
+import { MOCK_CATEGORIES } from '../data/mockData'; // Import MOCK_CATEGORIES
 
 // Define the ParamList for type safety
 export type RootStackParamList = {
@@ -50,10 +51,14 @@ const AppNavigator = () => {
         <Stack.Screen
           name="SubjectSelection"
           component={SubjectSelectionScreen}
-          options={({ route }) => ({
-            title: `Select Subject for ${route.params.categoryId}`,
-            headerShown: true,
-          })}
+          options={({ route }) => {
+            const category = MOCK_CATEGORIES.find(c => c.id === route.params.categoryId);
+            const categoryName = category ? category.name : 'Category';
+            return {
+              title: `Select Subject for ${categoryName}`,
+              headerShown: true, // Changed from false to true
+            };
+          }}
         />
         <Stack.Screen
           name="ComparisonTimeline"

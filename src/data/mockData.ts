@@ -15,7 +15,17 @@ export const MOCK_CATEGORIES: Category[] = [
   { id: 'modern', name: 'Modern Era', color: 'bg-pink-500' },
 ];
 
-// Enhanced mock events with more detailed descriptions and additional images
+// Helper to create ISO-like date strings, handling BC years
+// For simplicity in mock data, BC years are represented as negative.
+// Real date parsing will need to be more robust.
+const createDateString = (year: number, month: number = 1, day: number = 1): string => {
+  const absYear = Math.abs(year);
+  const yearString = absYear.toString().padStart(4, '0');
+  const monthString = month.toString().padStart(2, '0');
+  const dayString = day.toString().padStart(2, '0');
+  return `${year < 0 ? '-' : ''}${yearString}-${monthString}-${dayString}T00:00:00Z`;
+};
+
 export const MOCK_SUBJECTS: Subject[] = [
   {
     id: 'roman-empire',
@@ -97,7 +107,129 @@ export const MOCK_SUBJECTS: Subject[] = [
       },
     ],
   },
-  // ... other subjects can also have mainImage added to their events
+  {
+    id: 'iran-history',
+    name: 'History of Iran',
+    categoryId: 'history',
+    events: [
+      {
+        id: 'kura-araxes',
+        title: 'Kura–Araxes Culture',
+        description: 'A Bronze Age culture that stretched across the Caucasus and into northwestern Iran.',
+        date: createDateString(-3400), // 3400 BC
+        endDate: createDateString(-2000), // 2000 BC
+        mainImage: 'fallbacks/history.png', // Placeholder
+        category: 'history',
+      },
+      {
+        id: 'median-achaemenid',
+        title: 'Median and Achaemenid Empires',
+        description: 'The Median Empire followed by the Achaemenid Empire, founded by Cyrus the Great, which became the largest empire in ancient history.',
+        date: createDateString(-678), // 678 BC
+        endDate: createDateString(-330), // 330 BC
+        mainImage: 'fallbacks/history.png',
+        category: 'history',
+      },
+      {
+        id: 'parthian-empire',
+        title: 'Parthian Empire',
+        description: 'A major Iranian political and cultural power in ancient Iran and Iraq.',
+        date: createDateString(-247), // 247 BC (Corrected from -248 based on common sources)
+        endDate: createDateString(224), // 224 AD
+        mainImage: 'fallbacks/history.png',
+        category: 'history',
+      },
+      {
+        id: 'sasanian-empire',
+        title: 'Sasanian Empire',
+        description: 'The last Iranian empire before the rise of Islam, considered a peak of Persian civilization.',
+        date: createDateString(224), // 224 AD
+        endDate: createDateString(651), // 651 AD
+        mainImage: 'fallbacks/history.png',
+        category: 'history',
+      },
+      {
+        id: 'safavid-empire',
+        title: 'Safavid Empire',
+        description: 'One of the most significant ruling dynasties of Iran, established Shia Islam as the state religion.',
+        date: createDateString(1501), // 1501 AD
+        endDate: createDateString(1736), // 1736 AD
+        mainImage: 'fallbacks/history.png',
+        category: 'history',
+      },
+      {
+        id: 'qajar-dynasty',
+        title: 'Qajar Dynasty',
+        description: 'The ruling dynasty of Iran from 1789 to 1925.',
+        date: createDateString(1789), // Corrected from 1796 for consistency with common start of dynasty
+        endDate: createDateString(1925), // 1925 AD
+        mainImage: 'fallbacks/history.png',
+        category: 'history',
+      },
+      {
+        id: 'pahlavi-era',
+        title: 'Pahlavi Era',
+        description: 'The reign of the Pahlavi dynasty, from Reza Shah to Mohammad Reza Pahlavi.',
+        date: createDateString(1925), // 1925 AD
+        endDate: createDateString(1979), // 1979 AD
+        mainImage: 'fallbacks/history.png',
+        category: 'history',
+      },
+    ],
+  },
+  {
+    id: 'history_of_iran',
+    name: 'History of Iran',
+    categoryId: 'history',
+    description: 'A brief overview of significant periods in the history of Iran.',
+    events: [
+      {
+        id: 'sasanian_empire',
+        title: 'Sasanian Empire',
+        description: 'The last Iranian empire before the rise of Islam, ruling from 224 to 651 AD.',
+        date: '0224-01-01T00:00:00Z',
+        endDate: '0651-01-01T00:00:00Z',
+        mainImage: 'placeholder_sasanian.png', // Replace with actual image path or URL
+        category: 'history',
+      },
+      {
+        id: 'abbasid_caliphate_persia',
+        title: 'Abbasid Caliphate Influence',
+        description: 'Period of Abbasid Caliphate rule (750-1258 AD), which saw significant Persian cultural and scientific contributions.',
+        date: '0750-01-01T00:00:00Z',
+        endDate: '1258-01-01T00:00:00Z',
+        mainImage: 'placeholder_abbasid.png',
+        category: 'history',
+      },
+      {
+        id: 'seljuk_empire_persia',
+        title: 'Seljuk Empire Influence',
+        description: 'The Seljuk Empire, a Turco-Persian Sunni Muslim empire, controlled Persia from 1037 to 1194 AD.',
+        date: '1037-01-01T00:00:00Z',
+        endDate: '1194-01-01T00:00:00Z',
+        mainImage: 'placeholder_seljuk.png',
+        category: 'history',
+      },
+      {
+        id: 'safavid_empire',
+        title: 'Safavid Empire',
+        description: 'The Safavid dynasty ruled Iran from 1501 to 1736, establishing Twelver Shia Islam as the official religion.',
+        date: '1501-01-01T00:00:00Z',
+        endDate: '1736-01-01T00:00:00Z',
+        mainImage: 'placeholder_safavid.png',
+        category: 'history',
+      },
+      {
+        id: 'qajar_dynasty',
+        title: 'Qajar Dynasty',
+        description: 'The Qajar dynasty ruled Persia (Iran) from 1789 to 1925.',
+        date: '1789-01-01T00:00:00Z',
+        endDate: '1925-01-01T00:00:00Z',
+        mainImage: 'placeholder_qajar.png',
+        category: 'history',
+      },
+    ],
+  }
 ];
 
 export const fetchCategories = async () => {
@@ -122,4 +254,8 @@ export const fetchEventDetails = async (eventId: string) => {
 // Function to fetch event details by ID
 export const getEventById = (eventId: string): Event | undefined => {
   return MOCK_SUBJECTS.flatMap(subject => subject.events).find(event => event.id === eventId);
+};
+
+export const getSubjectById = (id: string): Subject | undefined => {
+  return MOCK_SUBJECTS.find(subject => subject.id === id);
 };
