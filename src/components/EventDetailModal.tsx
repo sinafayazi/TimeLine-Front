@@ -277,7 +277,7 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
           },
           modalStyle
         ]}
-        className="bg-white/20 backdrop-blur-lg"
+        className="bg-white"
       >
         {/* Header with title and close button */}
         <View className={`px-4 py-5 ${headerColor}`}>
