@@ -34,9 +34,9 @@ const AXIS_WIDTH = 20; // Width for the central axis line container
 const HORIZONTAL_PADDING = 10; // Padding on the sides of the timeline
 
 // Consistent item height and margin definitions
-const EFFECTIVE_ITEM_CONTENT_HEIGHT = 150; // Assumed height of the event content itself
+const EFFECTIVE_ITEM_CONTENT_HEIGHT = 300; // Updated height of the event content itself (previously 150)
 const ITEM_MARGIN_BOTTOM = 20; // Margin below each event item in the list
-const TOTAL_ITEM_STEP_HEIGHT = EFFECTIVE_ITEM_CONTENT_HEIGHT + ITEM_MARGIN_BOTTOM; // Total vertical space one item occupies
+const TOTAL_ITEM_STEP_HEIGHT = EFFECTIVE_ITEM_CONTENT_HEIGHT + ITEM_MARGIN_BOTTOM; // Total vertical space one item occupies (updated to reflect new content height)
 
 // Padding constants from styles
 const ROOT_VIEW_PADDING_TOP = 20; // From the main View's paddingTop: 20
@@ -54,8 +54,17 @@ const formatDateForAxis = (dateString: string): string => {
       console.warn(`formatDateForAxis: Parsed to invalid date: '${dateString}'`);
       return 'Invalid Date';
     }
-    // Example: "Jan 2023"
-    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    let year = date.getFullYear();
+    let yearStr = '';
+    let suffix = '';
+    if (year < 0) {
+      yearStr = Math.abs(year).toString();
+      suffix = ' BC';
+    } else {
+      yearStr = year.toString().replace(/^0+/, '');
+    }
+    // Example: "Jan 2023" or "Jan 500 BC"
+    return date.toLocaleDateString('en-US', { month: 'short' }) + ' ' + yearStr + suffix;
   } catch (error) {
     console.error(`formatDateForAxis: Error formatting date '${dateString}':`, error);
     return 'Invalid Date'; // Fallback to "Invalid Date" on any error
@@ -119,27 +128,22 @@ const WheelTimeline: React.FC<WheelTimelineProps> = ({
   });
 
   const eventAnimatedStyle = (index: number) => useAnimatedStyle(() => {
-    // Use TOTAL_ITEM_STEP_HEIGHT for consistent animation inputRange
-    const inputRange = [
-      (index - 1) * TOTAL_ITEM_STEP_HEIGHT,
-      index * TOTAL_ITEM_STEP_HEIGHT,
-      (index + 1) * TOTAL_ITEM_STEP_HEIGHT,
-    ];
-
-    const scale = interpolate(
-      scrollY.value,
-      inputRange,
-      [0.85, 1, 0.85], // Slightly less aggressive scaling
-      Extrapolation.CLAMP
-    );
-
-    const opacity = interpolate(
-      scrollY.value,
-      inputRange,
-      [0.6, 1, 0.6], // Slightly less aggressive opacity
-      Extrapolation.CLAMP
-    );
-
+    // Calculate the center of the visible area
+    // Calculate the vertical center of the visible area to determine the event's proximity to the center of the screen.
+    const visibleCenter = scrollY.value + height / 2;
+    // Calculate the center of this event
+    const eventCenter =
+      ROOT_VIEW_PADDING_TOP +
+      SCROLL_CONTENT_PADDING_VERTICAL +
+      (index * TOTAL_ITEM_STEP_HEIGHT) +
+      (EFFECTIVE_ITEM_CONTENT_HEIGHT / 2);
+    // Distance from the center
+    const distanceFromCenter = Math.abs(visibleCenter - eventCenter);
+    // The max distance at which the event is still visible (half the screen height)
+    const maxDistance = height / 2;
+    // Interpolate scale and opacity based on distance from center
+    const scale = 1 - Math.min(distanceFromCenter / maxDistance, 1) * 0.3; // scale from 1 to 0.7
+    const opacity = 1 - Math.min(distanceFromCenter / maxDistance, 1) * 0.7; // opacity from 1 to 0.3
     return {
       transform: [{ scale }],
       opacity,
@@ -157,7 +161,7 @@ const WheelTimeline: React.FC<WheelTimelineProps> = ({
 
   // Calculate positions for date ticks
   const dateTicks = allEvents.map((event, index) => {
-    // Calculate yPosition to align with the center of the event item's content area
+    // Calculate yPosition to align with the center of the event item's content area (updated for new content height)
     const eventContentCenterY =
       ROOT_VIEW_PADDING_TOP +
       SCROLL_CONTENT_PADDING_VERTICAL +
@@ -169,6 +173,7 @@ const WheelTimeline: React.FC<WheelTimelineProps> = ({
       yPosition: eventContentCenterY,
       // Store original event date for unique key generation
       originalDate: event.date,
+      index,
     };
   }).filter((value, index, self) =>
     index === self.findIndex((t) => (
@@ -176,6 +181,15 @@ const WheelTimeline: React.FC<WheelTimelineProps> = ({
     ))
   );
 
+  // Group events by formatted date, keeping track of original index
+  const eventsByDate: { [date: string]: { event: typeof allEvents[0], originalIndex: number }[] } = {};
+  allEvents.forEach((event, index) => {
+    const dateKey = formatDateForAxis(event.date);
+    if (!eventsByDate[dateKey]) {
+      eventsByDate[dateKey] = [];
+    }
+    eventsByDate[dateKey].push({ event, originalIndex: index });
+  });
 
   return (
     <View style={{ flex: 1, flexDirection: 'row', paddingTop: ROOT_VIEW_PADDING_TOP }}>
@@ -188,96 +202,68 @@ const WheelTimeline: React.FC<WheelTimelineProps> = ({
           width: width,
         }}
       >
-        {/* Vertical Axis Line - Now inside ScrollView */}
-        <Svg
-          height={allEvents.length * TOTAL_ITEM_STEP_HEIGHT + 2 * (height / 3)} // Adjusted height to match content
-          width={AXIS_WIDTH}
-          style={{
-            position: 'absolute',
-            left: width / 2 - AXIS_WIDTH / 2,
-            top: 0, // Starts from the top of the scroll content
-            bottom: 0,
-            zIndex: 0,
-          }}
-        >
-          <Line
-            x1={AXIS_WIDTH / 2}
-            y1="0"
-            x2={AXIS_WIDTH / 2}
-            y2="100%" // Will span the height of the Svg container
-            stroke="darkgrey"
-            strokeWidth="2"
-          />
-        </Svg>
-
-        {/* Axis Dates - Now inside ScrollView */}
-        <View style={{
-          position: 'absolute', // Still absolute, but relative to ScrollView content
-          left: 0, // Align with the left edge of the ScrollView
-          right: 0, // Align with the right edge of the ScrollView
-          top: 0, // Align with the top of the scroll content
-          height: '100%', // Spans the height of the scroll content
-          zIndex: 1, // Ensure dates are above the line but below events if they overlap
-          alignItems: 'center', // Center children horizontally
-        }}>
-          {dateTicks.map((tick) => (
+        {/* Render date separators and their events together */}
+        {Object.keys(eventsByDate).map((dateKey) => (
+          <View key={dateKey + '-group'}>
+            {/* Date Separator */}
             <View
-              key={`${tick.originalDate}-${tick.yPosition}`} // Use a more unique key
               style={{
-                position: 'absolute',
-                top: tick.yPosition - 10, // Adjust to vertically center the text (assuming text height ~20)
-                width: 100, // Give some width to the text container
-                alignItems: 'center', // Center text inside this view
+                width: '100%',
+                paddingTop: 32,
+                paddingBottom: 8,
+                alignItems: 'center',
+                flexDirection: 'row',
+                position: 'relative',
               }}
             >
+              <View style={{ flex: 1, height: 1, backgroundColor: '#D1D5DB', marginRight: 8, marginLeft: 16 }} />
               <Text style={{
-                color: 'black', // Ensure text is visible
-                fontSize: 12,
+                color: 'black',
+                fontSize: 13,
                 fontWeight: 'bold',
-                textAlign: 'center', // Center the text content
-                backgroundColor: 'rgba(255, 255, 255, 0.7)', // Optional: add a slight background for readability
-                paddingHorizontal: 4,
-                borderRadius: 4,
-              }}>
-                {tick.date}
-              </Text>
+                textAlign: 'center',
+                backgroundColor: 'rgba(255,255,255,0.9)',
+                paddingHorizontal: 8,
+                borderRadius: 6,
+                zIndex: 2,
+              }}>{dateKey}</Text>
+              <View style={{ flex: 1, height: 1, backgroundColor: '#D1D5DB', marginLeft: 8, marginRight: 16 }} />
             </View>
-          ))}
-        </View>
-
-        {allEvents.map((event, index) => {
-          const isSubject1 = event.isSubject1;
-          const itemStyle: ViewStyle = {
-            width: ITEM_WIDTH,
-            position: 'relative',
-            marginBottom: 20,
-            alignSelf: isSubject1 ? 'flex-start' : 'flex-end',
-            marginHorizontal: HORIZONTAL_PADDING,
-          };
-          
-          return (
-            <Animated.View
-              key={`event-${event.id}-${index}-${isSubject1}`}
-              style={[
-                itemStyle,
-                eventAnimatedStyle(index),
-                { zIndex: 2 } // Ensure events are above the axis and dates
-              ]}
-            >
-              <TimelineEventFixable
-                event={event}
-                index={index}
-                activeIndex={activeIndex}
-                side={isSubject1 ? 'left' : 'right'}
-                color={isSubject1 ? subject1Color.primary : subject2Color.primary}
-                textColor={isSubject1 ? subject1Color.text : subject2Color.text}
-                lightColor={isSubject1 ? subject1Color.light : subject2Color.light}
-                onPress={(e) => onEventPress(e, isSubject1)}
-                simplified={simplifiedMode}
-              />
-            </Animated.View>
-          );
-        })}
+            {/* Events for this date */}
+            {eventsByDate[dateKey].map(({ event, originalIndex }) => {
+              const isSubject1 = event.isSubject1;
+              const itemStyle: ViewStyle = {
+                width: ITEM_WIDTH,
+                position: 'relative',
+                marginBottom: 20,
+                alignSelf: isSubject1 ? 'flex-start' : 'flex-end',
+                marginHorizontal: HORIZONTAL_PADDING,
+              };
+              return (
+                <Animated.View
+                  key={`event-${event.id}-${originalIndex}-${isSubject1}`}
+                  style={[
+                    itemStyle,
+                    eventAnimatedStyle(originalIndex),
+                    { zIndex: 2 }
+                  ]}
+                >
+                  <TimelineEventFixable
+                    event={event}
+                    index={originalIndex}
+                    activeIndex={activeIndex}
+                    side={isSubject1 ? 'left' : 'right'}
+                    color={isSubject1 ? subject1Color.primary : subject2Color.primary}
+                    textColor={isSubject1 ? subject1Color.text : subject2Color.text}
+                    lightColor={isSubject1 ? subject1Color.light : subject2Color.light}
+                    onPress={(e) => onEventPress(e, isSubject1)}
+                    simplified={simplifiedMode}
+                  />
+                </Animated.View>
+              );
+            })}
+          </View>
+        ))}
       </Animated.ScrollView>
     </View>
   );
