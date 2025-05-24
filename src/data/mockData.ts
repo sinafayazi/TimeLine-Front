@@ -80,36 +80,111 @@ const createDateString = (year: number, month: number = 1, day: number = 1): str
 
 export const MOCK_SUBJECTS: Subject[] = [
   {
-    id: 'roman-empire',
-    name: 'Roman Empire',
-    categoryId: 'history',
-    description: 'The Roman Empire was one of the largest empires in history, covering much of Europe, North Africa, and the Middle East.',
-    events: [
-      {
-        id: 'event-1',
-        title: 'Founding of Rome',
-        date: '0753-04-21', // Standardized date
-        description: 'According to legend, Rome was founded in 753 BC by Romulus.',
-        category: 'Foundation',
-        mainImage: 'https://images.unsplash.com/photo-1560807707-8cc77767d783'
-      },
-      {
-        id: 'event-2',
-        title: 'Julius Caesar\'s Assassination',
-        date: '0044-03-15', // Standardized date
-        description: 'Julius Caesar was assassinated on the Ides of March.',
-        category: 'Political',
-        mainImage: 'https://images.unsplash.com/photo-1560807707-8cc77767d783'
-      },
-      {
-        id: 'event-3',
-        title: 'The Colosseum Opens',
-        date: '0080-01-01', // Standardized date
-        description: 'The Colosseum, an iconic symbol of Imperial Rome, was opened in 80 AD.',
-        category: 'Architecture',
-        mainImage: 'https://images.unsplash.com/photo-1560807707-8cc77767d783'
-      },
-    ],
+  "id": "ancient_egypt",
+  "name": "Ancient Egypt",
+  "categoryId": "history",
+  "description": "A civilization of ancient North Africa, concentrated along the lower reaches of the Nile River, known for its rich history, monumental architecture, and contributions to human knowledge.",
+  "events": [
+    {
+      "id": "predynastic_period",
+      "title": "Predynastic Period",
+      "description": "The era before the unification of Egypt, marked by the development of agriculture and early settlements along the Nile.",
+      "date": "-6000-01-01T00:00:00Z",
+      "endDate": "-3150-01-01T00:00:00Z",
+      "mainImage": "placeholder_predynastic.png",
+      "category": "history"
+    },
+    {
+      "id": "early_dynastic_period",
+      "title": "Early Dynastic Period",
+      "description": "The period following the unification of Upper and Lower Egypt under the first pharaoh, Narmer, leading to the establishment of the First and Second Dynasties.",
+      "date": "-3150-01-01T00:00:00Z",
+      "endDate": "-2686-01-01T00:00:00Z",
+      "mainImage": "placeholder_early_dynastic.png",
+      "category": "history"
+    },
+    {
+      "id": "old_kingdom",
+      "title": "Old Kingdom",
+      "description": "Known as the 'Age of the Pyramids,' this period saw the construction of the Great Pyramids of Giza and the rise of strong centralized government.",
+      "date": "-2686-01-01T00:00:00Z",
+      "endDate": "-2181-01-01T00:00:00Z",
+      "mainImage": "placeholder_old_kingdom.png",
+      "category": "history"
+    },
+    {
+      "id": "first_intermediate_period",
+      "title": "First Intermediate Period",
+      "description": "A time of political fragmentation and climate instability, leading to the decline of centralized power and the rise of local rulers.",
+      "date": "-2181-01-01T00:00:00Z",
+      "endDate": "-2055-01-01T00:00:00Z",
+      "mainImage": "placeholder_first_intermediate.png",
+      "category": "history"
+    },
+    {
+      "id": "middle_kingdom",
+      "title": "Middle Kingdom",
+      "description": "A period of reunification and cultural renaissance, marked by significant achievements in literature, art, and architecture.",
+      "date": "-2055-01-01T00:00:00Z",
+      "endDate": "-1650-01-01T00:00:00Z",
+      "mainImage": "placeholder_middle_kingdom.png",
+      "category": "history"
+    },
+    {
+      "id": "second_intermediate_period",
+      "title": "Second Intermediate Period",
+      "description": "Characterized by the rule of the Hyksos in the north and internal divisions, leading to a decline in centralized authority.",
+      "date": "-1650-01-01T00:00:00Z",
+      "endDate": "-1550-01-01T00:00:00Z",
+      "mainImage": "placeholder_second_intermediate.png",
+      "category": "history"
+    },
+    {
+      "id": "new_kingdom",
+      "title": "New Kingdom",
+      "description": "Egypt's most prosperous era, featuring powerful pharaohs like Hatshepsut, Akhenaten, Tutankhamun, and Ramesses II, and extensive territorial expansion.",
+      "date": "-1550-01-01T00:00:00Z",
+      "endDate": "-1069-01-01T00:00:00Z",
+      "mainImage": "placeholder_new_kingdom.png",
+      "category": "history"
+    },
+    {
+      "id": "third_intermediate_period",
+      "title": "Third Intermediate Period",
+      "description": "A time of political instability and division, with multiple competing dynasties and foreign invasions.",
+      "date": "-1069-01-01T00:00:00Z",
+      "endDate": "-664-01-01T00:00:00Z",
+      "mainImage": "placeholder_third_intermediate.png",
+      "category": "history"
+    },
+    {
+      "id": "late_period",
+      "title": "Late Period",
+      "description": "Marked by a series of foreign invasions and brief periods of native rule, culminating in Persian conquest.",
+      "date": "-664-01-01T00:00:00Z",
+      "endDate": "-332-01-01T00:00:00Z",
+      "mainImage": "placeholder_late_period.png",
+      "category": "history"
+    },
+    {
+      "id": "ptolemaic_period",
+      "title": "Ptolemaic Period",
+      "description": "Established after Alexander the Great's conquest, this era saw Greek rulers, including Cleopatra VII, govern Egypt until the Roman annexation.",
+      "date": "-332-01-01T00:00:00Z",
+      "endDate": "-30-01-01T00:00:00Z",
+      "mainImage": "placeholder_ptolemaic.png",
+      "category": "history"
+    },
+    {
+      "id": "roman_egypt",
+      "title": "Roman Egypt",
+      "description": "Following Cleopatra VII's defeat, Egypt became a province of the Roman Empire, marking the end of ancient Egyptian civilization.",
+      "date": "-30-01-01T00:00:00Z",
+      "endDate": "395-01-01T00:00:00Z",
+      "mainImage": "placeholder_roman_egypt.png",
+      "category": "history"
+    }
+  ]
   },
   {
     id: 'apollo-missions',
