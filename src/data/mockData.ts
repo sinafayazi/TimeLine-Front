@@ -5,14 +5,66 @@ const API_BASE_URL = 'https://api.example.com'; // Replace with your API base UR
 
 // Enhanced with more vibrant colors for better visual distinction
 export const MOCK_CATEGORIES: Category[] = [
-  { id: 'history', name: 'History', color: 'bg-red-500' },
-  { id: 'science', name: 'Science', color: 'bg-blue-500' },
-  { id: 'art', name: 'Art', color: 'bg-yellow-500' },
-  { id: 'technology', name: 'Technology', color: 'bg-green-500' },
-  { id: 'literature', name: 'Literature', color: 'bg-purple-500' },
-  { id: 'space', name: 'Space Exploration', color: 'bg-indigo-500' },
-  { id: 'ancient', name: 'Ancient Civilizations', color: 'bg-orange-500' },
-  { id: 'modern', name: 'Modern Era', color: 'bg-pink-500' },
+  {
+    "id": "history",
+    "name": "History",
+    "color": "bg-red-500"
+  },
+  {
+    "id": "science",
+    "name": "Science",
+    "color": "bg-blue-500"
+  },
+  {
+    "id": "art",
+    "name": "Art",
+    "color": "bg-pink-500"
+  },
+  {
+    "id": "technology",
+    "name": "Technology",
+    "color": "bg-gray-700"
+  },
+  {
+    "id": "geography",
+    "name": "Geography",
+    "color": "bg-green-500"
+  },
+  {
+    "id": "philosophy",
+    "name": "Philosophy",
+    "color": "bg-yellow-600"
+  },
+  {
+    "id": "religion",
+    "name": "Religion",
+    "color": "bg-purple-600"
+  },
+  {
+    "id": "society",
+    "name": "Society",
+    "color": "bg-orange-500"
+  },
+  {
+    "id": "health",
+    "name": "Health",
+    "color": "bg-teal-500"
+  },
+  {
+    "id": "mathematics",
+    "name": "Mathematics",
+    "color": "bg-indigo-500"
+  },
+  {
+    "id": "nature",
+    "name": "Nature",
+    "color": "bg-lime-500"
+  },
+  {
+    "id": "people",
+    "name": "People",
+    "color": "bg-amber-500"
+  }
 ];
 
 // Helper to create ISO-like date strings, handling BC years
@@ -108,128 +160,103 @@ export const MOCK_SUBJECTS: Subject[] = [
     ],
   },
   {
-    id: 'iran-history',
-    name: 'History of Iran',
-    categoryId: 'history',
-    events: [
-      {
-        id: 'kura-araxes',
-        title: 'Kura–Araxes Culture',
-        description: 'A Bronze Age culture that stretched across the Caucasus and into northwestern Iran.',
-        date: createDateString(-3400), // 3400 BC
-        endDate: createDateString(-2000), // 2000 BC
-        mainImage: 'fallbacks/history.png', // Placeholder
-        category: 'history',
-      },
-      {
-        id: 'median-achaemenid',
-        title: 'Median and Achaemenid Empires',
-        description: 'The Median Empire followed by the Achaemenid Empire, founded by Cyrus the Great, which became the largest empire in ancient history.',
-        date: createDateString(-678), // 678 BC
-        endDate: createDateString(-330), // 330 BC
-        mainImage: 'fallbacks/history.png',
-        category: 'history',
-      },
-      {
-        id: 'parthian-empire',
-        title: 'Parthian Empire',
-        description: 'A major Iranian political and cultural power in ancient Iran and Iraq.',
-        date: createDateString(-247), // 247 BC (Corrected from -248 based on common sources)
-        endDate: createDateString(224), // 224 AD
-        mainImage: 'fallbacks/history.png',
-        category: 'history',
-      },
-      {
-        id: 'sasanian-empire',
-        title: 'Sasanian Empire',
-        description: 'The last Iranian empire before the rise of Islam, considered a peak of Persian civilization.',
-        date: createDateString(224), // 224 AD
-        endDate: createDateString(651), // 651 AD
-        mainImage: 'fallbacks/history.png',
-        category: 'history',
-      },
-      {
-        id: 'safavid-empire',
-        title: 'Safavid Empire',
-        description: 'One of the most significant ruling dynasties of Iran, established Shia Islam as the state religion.',
-        date: createDateString(1501), // 1501 AD
-        endDate: createDateString(1736), // 1736 AD
-        mainImage: 'fallbacks/history.png',
-        category: 'history',
-      },
-      {
-        id: 'qajar-dynasty',
-        title: 'Qajar Dynasty',
-        description: 'The ruling dynasty of Iran from 1789 to 1925.',
-        date: createDateString(1789), // Corrected from 1796 for consistency with common start of dynasty
-        endDate: createDateString(1925), // 1925 AD
-        mainImage: 'fallbacks/history.png',
-        category: 'history',
-      },
-      {
-        id: 'pahlavi-era',
-        title: 'Pahlavi Era',
-        description: 'The reign of the Pahlavi dynasty, from Reza Shah to Mohammad Reza Pahlavi.',
-        date: createDateString(1925), // 1925 AD
-        endDate: createDateString(1979), // 1979 AD
-        mainImage: 'fallbacks/history.png',
-        category: 'history',
-      },
-    ],
-  },
-  {
-    id: 'history_of_iran',
-    name: 'History of Iran',
-    categoryId: 'history',
-    description: 'A brief overview of significant periods in the history of Iran.',
-    events: [
-      {
-        id: 'sasanian_empire',
-        title: 'Sasanian Empire',
-        description: 'The last Iranian empire before the rise of Islam, ruling from 224 to 651 AD.',
-        date: '0224-01-01T00:00:00Z',
-        endDate: '0651-01-01T00:00:00Z',
-        mainImage: 'placeholder_sasanian.png', // Replace with actual image path or URL
-        category: 'history',
-      },
-      {
-        id: 'abbasid_caliphate_persia',
-        title: 'Abbasid Caliphate Influence',
-        description: 'Period of Abbasid Caliphate rule (750-1258 AD), which saw significant Persian cultural and scientific contributions.',
-        date: '0750-01-01T00:00:00Z',
-        endDate: '1258-01-01T00:00:00Z',
-        mainImage: 'placeholder_abbasid.png',
-        category: 'history',
-      },
-      {
-        id: 'seljuk_empire_persia',
-        title: 'Seljuk Empire Influence',
-        description: 'The Seljuk Empire, a Turco-Persian Sunni Muslim empire, controlled Persia from 1037 to 1194 AD.',
-        date: '1037-01-01T00:00:00Z',
-        endDate: '1194-01-01T00:00:00Z',
-        mainImage: 'placeholder_seljuk.png',
-        category: 'history',
-      },
-      {
-        id: 'safavid_empire',
-        title: 'Safavid Empire',
-        description: 'The Safavid dynasty ruled Iran from 1501 to 1736, establishing Twelver Shia Islam as the official religion.',
-        date: '1501-01-01T00:00:00Z',
-        endDate: '1736-01-01T00:00:00Z',
-        mainImage: 'placeholder_safavid.png',
-        category: 'history',
-      },
-      {
-        id: 'qajar_dynasty',
-        title: 'Qajar Dynasty',
-        description: 'The Qajar dynasty ruled Persia (Iran) from 1789 to 1925.',
-        date: '1789-01-01T00:00:00Z',
-        endDate: '1925-01-01T00:00:00Z',
-        mainImage: 'placeholder_qajar.png',
-        category: 'history',
-      },
-    ],
-  }
+  "id": "iranian_history",
+  "name": "Iranian History",
+  "categoryId": "history",
+  "description": "A comprehensive overview of significant periods in the history of Iran, from ancient civilizations to the modern Islamic Republic.",
+  "events": [
+    {
+      "id": "elamite_civilization",
+      "title": "Elamite Civilization",
+      "description": "One of the earliest civilizations in Iran, centered in the far west and southwest of modern-day Iran.",
+      "date": "-3200-01-01T00:00:00Z",
+      "endDate": "-539-01-01T00:00:00Z",
+      "mainImage": "placeholder_elamite.png",
+      "category": "history"
+    },
+    {
+      "id": "median_empire",
+      "title": "Median Empire",
+      "description": "The first Iranian empire, established by the Medes in the 7th century BC.",
+      "date": "-678-01-01T00:00:00Z",
+      "endDate": "-550-01-01T00:00:00Z",
+      "mainImage": "placeholder_median.png",
+      "category": "history"
+    },
+    {
+      "id": "achaemenid_empire",
+      "title": "Achaemenid Empire",
+      "description": "Founded by Cyrus the Great, it became one of the largest empires in history.",
+      "date": "-550-01-01T00:00:00Z",
+      "endDate": "-330-01-01T00:00:00Z",
+      "mainImage": "placeholder_achaemenid.png",
+      "category": "history"
+    },
+    {
+      "id": "parthian_empire",
+      "title": "Parthian Empire",
+      "description": "Also known as the Arsacid Empire, it was a major Iranian political and cultural power.",
+      "date": "-247-01-01T00:00:00Z",
+      "endDate": "224-01-01T00:00:00Z",
+      "mainImage": "placeholder_parthian.png",
+      "category": "history"
+    },
+    {
+      "id": "sasanian_empire",
+      "title": "Sasanian Empire",
+      "description": "The last Iranian empire before the rise of Islam, ruling from 224 to 651 AD.",
+      "date": "224-01-01T00:00:00Z",
+      "endDate": "651-01-01T00:00:00Z",
+      "mainImage": "placeholder_sasanian.png",
+      "category": "history"
+    },
+    {
+      "id": "islamic_conquest",
+      "title": "Islamic Conquest of Persia",
+      "description": "The Arab Muslim conquest that led to the fall of the Sasanian Empire and the spread of Islam in Iran.",
+      "date": "633-01-01T00:00:00Z",
+      "endDate": "651-01-01T00:00:00Z",
+      "mainImage": "placeholder_islamic_conquest.png",
+      "category": "history"
+    },
+    {
+      "id": "safavid_dynasty",
+      "title": "Safavid Dynasty",
+      "description": "Established Twelver Shia Islam as the official religion of Iran.",
+      "date": "1501-01-01T00:00:00Z",
+      "endDate": "1736-01-01T00:00:00Z",
+      "mainImage": "placeholder_safavid.png",
+      "category": "history"
+    },
+    {
+      "id": "qajar_dynasty",
+      "title": "Qajar Dynasty",
+      "description": "Ruled Iran from 1789 to 1925, a period marked by significant political and social changes.",
+      "date": "1789-01-01T00:00:00Z",
+      "endDate": "1925-01-01T00:00:00Z",
+      "mainImage": "placeholder_qajar.png",
+      "category": "history"
+    },
+    {
+      "id": "pahlavi_dynasty",
+      "title": "Pahlavi Dynasty",
+      "description": "The last monarchy in Iran, overthrown during the 1979 Islamic Revolution.",
+      "date": "1925-01-01T00:00:00Z",
+      "endDate": "1979-01-01T00:00:00Z",
+      "mainImage": "placeholder_pahlavi.png",
+      "category": "history"
+    },
+    {
+      "id": "islamic_republic",
+      "title": "Islamic Republic of Iran",
+      "description": "Established after the 1979 revolution, marking the beginning of the current political system.",
+      "date": "1979-01-01T00:00:00Z",
+      "endDate": "present",
+      "mainImage": "placeholder_islamic_republic.png",
+      "category": "history"
+    }
+  ]
+}
 ];
 
 export const fetchCategories = async () => {
